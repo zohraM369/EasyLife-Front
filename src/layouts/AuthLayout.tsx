@@ -42,7 +42,7 @@ export const AuthLayout = () => {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate("/register", { replace: true })}
-              className="bg-customBlue2 hover:bg-customGreen text-white font-bold py-3 px-8 rounded-md"
+              className="bg-customBlue2 hover:bg-customGreen text-white font-bold py-3 px-11  rounded-2xl"
             >
               S'INSCRIRE
             </button>

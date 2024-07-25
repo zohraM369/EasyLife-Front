@@ -12,6 +12,7 @@ module.exports = {
       },
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
       },
       fontSize: {
         "24px": "24px",
