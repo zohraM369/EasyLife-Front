@@ -109,7 +109,7 @@ export const Landing = () => {
 
           <form className="lg:w-1/2 p-6">
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">
+              <label className="block text-black font-inter mb-2">
                 Nom et prénom <span className="text-customRouge">*</span>
               </label>
               <input
@@ -118,7 +118,7 @@ export const Landing = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">
+              <label className="block text-black font-inter  mb-2">
                 Email <span className="text-customRouge">*</span>
               </label>
               <input
@@ -127,7 +127,7 @@ export const Landing = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">
+              <label className="block text-black font-inter  mb-2">
                 Numero de téléphone <span className="text-customRouge">*</span>
               </label>
               <input
@@ -136,7 +136,7 @@ export const Landing = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">
+              <label className="block text-black font-inter  mb-2">
                 Message <span className="text-customRouge">*</span>
               </label>
               <textarea className="w-full px-3 py-2 border rounded-lg"></textarea>

@@ -4,7 +4,7 @@ export const AuthLayout = () => {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-gray-50 rounded-t-lg">
+      <div className="flex flex-col min-h-screen bg-customBlue4 rounded-t-lg">
         <header className="bg-customBlue text-white flex justify-between items-center p-4">
           <div className="flex items-center">
             <img
@@ -72,7 +72,7 @@ export const AuthLayout = () => {
 
         <Outlet />
 
-        <footer className="bg-customBlue text-white text-center mt-auto">
+        <footer className="bg-customBlue text-white text-center">
           <div className="flex justify-between items-center">
             <img
               src="../src/assets/easylife_logo.png"

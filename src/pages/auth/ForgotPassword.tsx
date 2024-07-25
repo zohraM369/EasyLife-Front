@@ -1,32 +1,36 @@
 export const ForgotPassword = () => {
   return (
-    <main className="flex-grow flex justify-center items-center p-6">
-      <div className="bg-white w-[50vw] p-2 shadow ">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          Mot de passe oublié ?
-        </h2>
-        <form className="space-y-4">
-          <p>
-            Pour réinitialiser votre mot de passe, veuillez inscrire l'adresse
-            e-mail de votre compte EasyLife.
-          </p>
-          <div>
-            <label className="block text-gray-700">Email *</label>
-            <input
-              type="email"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
+    <div className="bg-customBlue4">
+      <div className="bg-white w-8/12 h-fit m-7 mx-auto flex-grow rounded-3xl shadow-md p-8">
+        <div className="w-1/3 m-auto">
+          <h2 className="text-3xl font-bold text-center mb-20">
+            Mot de passe oublié ?
+          </h2>
+          <form className="space-y-4">
+            <p className="text-black font-bol">
+              Pour réinitialiser votre mot de passe, veuillez inscrire l'adresse
+              e-mail de votre compte EasyLife.
+            </p>
+            <div>
+              <label className="block text-black font-inter">
+                Email <span className="text-customRouge">*</span>
+              </label>
+              <input
+                type="email"
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
 
-          <button className="w-full bg-blue-500 text-white py-2 rounded">
-            Réinitialiser mon mot de passe
-          </button>
-        </form>
-        <a href="/login" className="text-blue-500">
-          {" "}
-          <p className="text-center mt-4">se connecter</p>
-        </a>
+            <button className="w-2/3 bg-customBlue2 text-white py-3 rounded-2xl">
+              Réinitialiser mon mot de passe
+            </button>
+          </form>
+          <a href="/login" className="text-customBlue2 font-semibold">
+            {" "}
+            <p className="text-center mt-4">se connecter</p>
+          </a>
+        </div>
       </div>
-    </main>
+    </div>
   );
 };

@@ -9,6 +9,7 @@ module.exports = {
         customBlue2: "#1774FF",
         customRouge: "#D0021B",
         customBlue3: "#E5F1FF",
+        customBlue4: "#EFF7FF",
       },
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
