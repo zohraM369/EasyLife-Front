@@ -1,5 +1,31 @@
 export const HOME = "/"
 export const REGISTER = "/register"
 export const LOGIN = "/login"
-
+export const RESETPASSWORD = "/reset_password/:token"
 export const FORGOT_PASSWORD = "/forgot_password"
+export const DASHBOARD = "/dashboard"
+export const ADMINDASHBOARD = "/admin_dashboard"
+export const ADMINUSERS = "/admin_dashboard/users"
+export const ADMINSETTINGS = "/admin_dashboard/settings"
+export const ADMINMESSAGES = '/admin_dashboard/messages'
+export const ADDTASK = "/dashboard/add_task"
+export const COMINGTASKS = "/dashboard/coming_tasks"
+export const USERTASKS = "/dashboard/tasks"
+export const FRIENDSMANAGEMENT = "/dashboard/friends_management"
+export const TASKMANAGEMENT = "/dashboard/task_management/:taskId"
+export const NOTIFICATIONS = "/dashboard/notifications"
+export const MESSAGES = '/dashboard/messages'
+export const UPDATE_EMAIL = "/dashboard/update_email"
+export const UPDATE_CITY = "/dashboard/update_city"
+
+export const UPDATE_PASSWORD = "/dashboard/update_password"
+export const UPDATE_NAME = "/dashboard/update_name"
+export const CALENDAR = "/dashboard/calendar"
+export const PROFILE = "/dashboard/profile"
+export const FORM_ELEMENTS = "/dashboard/forms/form-elements"
+export const FORM_LAYOUT = "/dashboard/forms/form-layout"
+export const TABLES = "/dashboard/tables"
+export const SETTINGS = "/dashboard/settings"
+export const CHART = "/dashboard/chart"
+export const UI_ALERTS = '/dashboard/ui/alerts'
+export const UI_BUTTONS = '/dashboard/ui/buttons'

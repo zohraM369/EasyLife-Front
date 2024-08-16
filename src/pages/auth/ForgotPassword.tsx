@@ -6,8 +6,8 @@ export const ForgotPassword = () => {
           <h2 className="text-3xl font-bold text-center mb-20">
             Mot de passe oublié ?
           </h2>
-          <form className="space-y-4">
-            <p className="text-black font-bol">
+          <form className="space-y-4 flex flex-col">
+            <p className="text-black font-bold">
               Pour réinitialiser votre mot de passe, veuillez inscrire l'adresse
               e-mail de votre compte EasyLife.
             </p>
@@ -21,7 +21,7 @@ export const ForgotPassword = () => {
               />
             </div>
 
-            <button className="w-2/3 bg-customBlue2 text-white py-3 rounded-2xl">
+            <button className="px-3 py-5  w-4/3 bg-customBlue2 text-white py-3 rounded-2xl">
               Réinitialiser mon mot de passe
             </button>
           </form>

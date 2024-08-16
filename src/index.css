@@ -2,6 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-.root {
-  background-color: #eff7ff;
+.animated-image {
+  transition: transform 0.6s ease, filter 0.6s ease, box-shadow 0.6s ease;
+  transform-origin: center;
+  width: 30vw; 
+  cursor: pointer;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+}
+
+.image-container:hover .animated-image {
+  animation: glow 1s infinite alternate; 
+  transform: rotate(15deg) scale(1.15) translateZ(70px);
+  filter: brightness(1.3) contrast(1.3) saturate(1.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  border: 5px solid rgba(255, 255, 255, 0.8);
+}
+
+
+
+.rectangle-container {
+  position: relative;
+  width: 60vw; 
+  height: 40vh; 
+ border:  1vh solid rgb(209, 205, 205);
+ border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-left {
+  bottom: 25vh;
+  left: 0px;
+}
+
+.top-right {
+  bottom: 25vh;
+  right: 0px;
+}
+
+.bottom-left {
+  bottom: -20vh;
+  left: 0px;
+}
+
+.bottom-right {
+  bottom: -20vh;
+  right: 0px;
+}
+
+.title {
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.small-image {
+  width: 30vh;
+  height: 25vh; 
+}
+
+
+.small-image:hover {
+ transform: rotate(360deg) scale(1.25) translateZ(70px);
+ transition-duration: 1s;
+}
+
+.center-text {
+  position: absolute;
+  font-size: 3em;
+  font-weight: 600;
+  color: rgb(47, 54, 107); 
+  text-align: center;
+}
+.toggle-checkbox {
+  height: 24px;
+  width: 24px;
+  background-color: #4B5563;
+  border-radius: 9999px;
+  position: relative;
+  appearance: none;
+  cursor: pointer;
+}
+
+.toggle-checkbox:checked {
+  background-color: #6366F1;
+}
+
+.toggle-checkbox::after {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background-color: #FFF;
+  border-radius: 50%;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  transition: left 0.2s;
+}
+
+.toggle-checkbox:checked::after {
+  left: calc(100% - 24px + 4px);
 }
