@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaPlus, FaClock, FaCalendarAlt } from "react-icons/fa";
 import { Message } from "../../interfaces/MessageInterface";
-import MessageModal from "./MessageModal";
+import { MessageModal } from "./MessageModal";
 import messageService from "../../services/messagesServices";
 import { useAuth } from "../../context/AuthContext";
-import friendService from "../../services/friendsService";
+import { friendService } from "../../services/friendsService";
 import { FaMessage } from "react-icons/fa6";
 
 export const Messages: React.FC = () => {

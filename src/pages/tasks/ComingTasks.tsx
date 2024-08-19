@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { FaCalendar, FaCircle } from 'react-icons/fa6';
-import Task from '../../interfaces/TaskInterface';
-import taskServices from '../../services/TaskServices';
+import React, { useEffect, useState } from "react";
+import { FaCalendar, FaCircle } from "react-icons/fa6";
+import { Task } from "../../interfaces/TaskInterface";
+import { taskServices } from "../../services/TaskServices";
 
 interface TaskCardProps {
   status: string;
@@ -14,16 +14,34 @@ interface TaskCardProps {
 
 const colors: { [key: string]: string } = {
   "Santé et bien être": "red",
-  "Éducation": "green",
-  "Perso": "yellow",
-  "Travail": "blue",
+  Éducation: "green",
+  Perso: "yellow",
+  Travail: "blue",
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ description, status, title, date, category, color }) => {
+const TaskCard: React.FC<TaskCardProps> = ({
+  description,
+  status,
+  title,
+  date,
+  category,
+  color,
+}) => {
   return (
-    <div className="bg-white rounded-lg shadow p-4 mb-4 border-l-4" style={{ borderColor: color }}>
+    <div
+      className="bg-white rounded-lg shadow p-4 mb-4 border-l-4"
+      style={{ borderColor: color }}
+    >
       <div className="flex justify-between items-center">
-        <h3 className={`text-lg font-semibold ${status === 'En retard' ? 'text-red-500' : status === 'Terminé' ? 'text-green-500' : 'text-blue-500'}`}>
+        <h3
+          className={`text-lg font-semibold ${
+            status === "En retard"
+              ? "text-red-500"
+              : status === "Terminé"
+              ? "text-green-500"
+              : "text-blue-500"
+          }`}
+        >
           {title}
         </h3>
         <button className="text-red-500">
@@ -43,7 +61,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ description, status, title, date, c
   );
 };
 
-const ComingTasks: React.FC = () => {
+export const ComingTasks: React.FC = () => {
   const today = new Date();
   const user_id = "66a941d4d83285e45c8ea688";
 
@@ -55,10 +73,10 @@ const ComingTasks: React.FC = () => {
     const fetchTasks = async () => {
       try {
         const response = await taskServices.getUserTasks(user_id);
-        console.log('Fetched tasks:', response);
+        console.log("Fetched tasks:", response);
         setTasks(response);
       } catch (error) {
-        console.error('Error fetching tasks:', error);
+        console.error("Error fetching tasks:", error);
       }
     };
 
@@ -86,15 +104,18 @@ const ComingTasks: React.FC = () => {
   const startOfMonth = new Date(currentYear, currentMonth, 1);
 
   const parseDate = (dateStr: string) => {
-    const [day, month, year] = dateStr.split('/').map(Number);
+    const [day, month, year] = dateStr.split("/").map(Number);
     return new Date(year, month - 1, day);
   };
 
   const getFilteredTasks = () => {
     return tasks
-      .filter(task => {
+      .filter((task) => {
         const taskDate = parseDate(task.date);
-        return taskDate.getFullYear() === currentYear && taskDate.getMonth() === currentMonth;
+        return (
+          taskDate.getFullYear() === currentYear &&
+          taskDate.getMonth() === currentMonth
+        );
       })
       .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime())
       .slice(0, 3);
@@ -107,7 +128,9 @@ const ComingTasks: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-2xl font-bold mb-4">Prochainement</div>
         <div className="flex justify-between items-center mb-6">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">Aujourd'hui</button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            Aujourd'hui
+          </button>
           <div className="rounded bg-blue-500 text-white px-4 py-2">
             <button
               onClick={handlePreviousMonth}
@@ -115,7 +138,10 @@ const ComingTasks: React.FC = () => {
             >
               &lt;
             </button>
-            {startOfMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+            {startOfMonth.toLocaleDateString("fr-FR", {
+              month: "long",
+              year: "numeric",
+            })}
             <button
               onClick={handleNextMonth}
               className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
@@ -128,7 +154,7 @@ const ComingTasks: React.FC = () => {
           {filteredTasks.length > 0 ? (
             filteredTasks.map((task, index) => (
               <div key={index}>
-                <h1 className='text-center mb-3'>{task.date}</h1>
+                <h1 className="text-center mb-3">{task.date}</h1>
                 <TaskCard
                   description={task.description}
                   status={task.status}
@@ -140,7 +166,9 @@ const ComingTasks: React.FC = () => {
               </div>
             ))
           ) : (
-            <div className="text-center col-span-full">aucun événement dans ce mois</div>
+            <div className="text-center col-span-full">
+              aucun événement dans ce mois
+            </div>
           )}
         </div>
       </div>
@@ -148,14 +176,17 @@ const ComingTasks: React.FC = () => {
   );
 };
 
-export default ComingTasks;
-
 const getTaskColor = (category: string) => {
   switch (category) {
-    case 'Éducation': return 'bg-green-700';
-    case 'Perso': return 'bg-yellow-700';
-    case 'Santé et bien être': return 'bg-red-700';
-    case 'Travail': return 'bg-blue-700';
-    default: return 'bg-gray-700';
+    case "Éducation":
+      return "bg-green-700";
+    case "Perso":
+      return "bg-yellow-700";
+    case "Santé et bien être":
+      return "bg-red-700";
+    case "Travail":
+      return "bg-blue-700";
+    default:
+      return "bg-gray-700";
   }
 };

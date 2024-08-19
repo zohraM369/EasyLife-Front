@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { FaEnvelope, FaTrash, FaStar } from 'react-icons/fa';
-import adminServices from '../../services/adminServices';
-import MessageModal from '../Messages/MessageModal';
-import {Message} from '../../interfaces/MessageInterface';
-import messagesServices from '../../services/messagesServices';
-import authService from '../../services/authServices';
-import {toast} from 'react-toastify';
-
+import React, { useEffect, useState } from "react";
+import { FaEnvelope, FaTrash, FaStar } from "react-icons/fa";
+import adminServices from "../../services/adminServices";
+import { MessageModal } from "../Messages/MessageModal";
+import { Message } from "../../interfaces/MessageInterface";
+import messagesServices from "../../services/messagesServices";
+import { authService } from "../../services/authServices";
+import { toast } from "react-toastify";
 
 interface User {
   _id: string;
@@ -25,7 +24,7 @@ const UsersList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [recipient,setRecipient] = useState<User[]>([])
+  const [recipient, setRecipient] = useState<User[]>([]);
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
   const handlePrevPage = () => {
@@ -39,28 +38,30 @@ const UsersList: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentUsers = users.slice(startIndex, startIndex + itemsPerPage);
 
+  const handleGetUsers = async () => {
+    let result = await adminServices.getUsers();
+    console.log(result);
+    setUsers(result);
+  };
 
-const handleGetUsers = async () => {
-  let result = await adminServices.getUsers()
-  console.log(result)
-  setUsers(result)
-}
-
-  useEffect(()=>{
-handleGetUsers()   
-  },[])
- const handleSendMessage = async (message: Message) => {
+  useEffect(() => {
+    handleGetUsers();
+  }, []);
+  const handleSendMessage = async (message: Message) => {
     const newMessage = await messagesServices.createMessage(message);
     setMessages([...messages, newMessage]);
   };
 
-const handleDeleteUser = async (id:string)  => {
-  await authService.delete_user(id).then(()=>{
-    toast.error("utilisateur supprimé !")
-  }).then(()=>{
-    handleGetUsers()
-  })
-}
+  const handleDeleteUser = async (id: string) => {
+    await authService
+      .delete_user(id)
+      .then(() => {
+        toast.error("utilisateur supprimé !");
+      })
+      .then(() => {
+        handleGetUsers();
+      });
+  };
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-md">
@@ -70,27 +71,36 @@ const handleDeleteUser = async (id:string)  => {
             {currentUsers.map((user) => (
               <tr key={user._id} className="border-b border-gray-200">
                 <td className="px-4 py-2">
-                  <FaStar  />
+                  <FaStar />
                 </td>
                 <td className="px-4 py-2 flex items-center">
                   <img
                     className="w-10 h-10 rounded-full"
-                    src={"http://localhost:8000"+user.image}
+                    src={"http://localhost:8000" + user.image}
                     alt="Avatar"
                   />
                   <div className="ml-2">
-                    <div className="font-bold text-gray-900">{user.name}</div>
-_                  </div>
+                    <div className="font-bold text-gray-900">{user.name}</div>_{" "}
+                  </div>
                 </td>
                 <td className="px-4 py-2">
                   <div className="text-gray-600">{user.email}</div>
                 </td>
                 <td className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-                    <button  onClick={() => { setRecipient([user]) ; setIsModalOpen(true)}} className="text-blue-500">
+                    <button
+                      onClick={() => {
+                        setRecipient([user]);
+                        setIsModalOpen(true);
+                      }}
+                      className="text-blue-500"
+                    >
                       <FaEnvelope />
                     </button>
-                    <button onClick={()=>handleDeleteUser(user._id)} className="text-red-500">
+                    <button
+                      onClick={() => handleDeleteUser(user._id)}
+                      className="text-red-500"
+                    >
                       <FaTrash />
                     </button>
                   </div>

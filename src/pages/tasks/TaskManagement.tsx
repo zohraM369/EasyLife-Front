@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { FaCircle, FaTrash, FaCalendar, FaPlus } from "react-icons/fa6";
+import {
+  FaCircle,
+  FaTrash,
+  FaCalendar,
+  FaPlus,
+  FaRecycle,
+} from "react-icons/fa6";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import taskServices from "../../services/TaskServices";
-import friendService from "../../services/friendsService";
+import { taskServices } from "../../services/TaskServices";
+import { friendService } from "../../services/friendsService";
 import { useAuth } from "../../context/AuthContext";
 
-const TaskManagement: React.FC = () => {
+export const TaskManagement: React.FC = () => {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const { user } = useAuth();
@@ -115,6 +121,14 @@ const TaskManagement: React.FC = () => {
           <button onClick={() => handleDeleteTask(task?._id)}>
             <FaTrash color="red" />
           </button>
+          <div className="flex items-center">
+            <FaRecycle color="green" className="mx-3" />{" "}
+            <button
+              onClick={() => navigate(`/dashboard/update_task/${task?._id}`)}
+            >
+              Mettre a jour
+            </button>
+          </div>
         </div>
 
         <div className="p-4 bg-white rounded shadow">
@@ -291,7 +305,6 @@ const TaskManagement: React.FC = () => {
   );
 };
 
-export default TaskManagement;
 const getStatusColor = (status: string) => {
   switch (status) {
     case "coming":

@@ -1,11 +1,9 @@
-interface User {
+export interface User {
   _id: string;
-  email:string;
-  image:string
+  email: string;
+  image: string;
   name: string;
   city: string;
-  friends?:[string]
-  role : string
+  friends?: [string];
+  role: string;
 }
-
-export default User

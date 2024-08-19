@@ -3,10 +3,12 @@ import { taskServices } from "../../services/TaskServices";
 import { Task } from "../../interfaces/TaskInterface";
 import { getWeatherForTask } from "../../services/WeatherServices";
 import { toast, ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-export const AddTask = () => {
+
+export const UpdateTask = () => {
   const navigate = useNavigate();
+  const { taskId } = useParams();
   const { user } = useAuth();
   const [task, setTask] = useState<Task>({
     user_id: user._id,
@@ -25,6 +27,20 @@ export const AddTask = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const response = await taskServices.getTaskById(taskId);
+        const taskData = response;
+        setTask(taskData);
+      } catch (error) {
+        console.error("Error fetching task data:", error);
+      }
+    };
+
+    fetchTask();
+  }, [taskId]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setTask((prevTask) => ({
@@ -38,11 +54,10 @@ export const AddTask = () => {
     if (user?.city) {
       try {
         const weather = await getWeatherForTask(task, user.city);
-        console.log(weather);
         if (weather.data) {
           const updatedTask = { ...task, weather: weather.data.data };
 
-          const response = await taskServices.createTask(updatedTask);
+          const response = await taskServices.updateTask(taskId, updatedTask);
 
           toast.success(response.msg);
 
@@ -51,7 +66,7 @@ export const AddTask = () => {
           }, 2500);
         }
       } catch (error) {
-        console.error("Error fetching weather data:", error);
+        console.error("Error updating task:", error);
       }
     } else {
       console.log("City not found in local storage.");
@@ -59,26 +74,29 @@ export const AddTask = () => {
   };
 
   const handleDateChange = (e: any) => {
-    const rawDate = e.target.value; // Format: "yyyy-mm-dd"
+    const rawDate = e.target.value;
     const [year, month, day] = rawDate.split("-");
     const formattedDate = `${day}/${month}/${year}`;
     setTask({ ...task, date: formattedDate });
   };
 
   const handleTimeChange = (e: any) => {
-    const rawTime = e.target.value; // Format: "hh:mm"
+    const rawTime = e.target.value;
     const [hours, minutes] = rawTime.split(":");
     const formattedTime = `${hours}h${minutes}`;
     setTask({ ...task, time: formattedTime });
   };
+
   return (
-    <div className=" min-h-screen flex">
+    <div className="min-h-screen flex">
       <ToastContainer />
-      <main className=" flex-1 p-8 bg-gray-50 ">
+      <main className="flex-1 p-8 bg-gray-50">
         <section className="bg-white p-8 dark:bg-boxdark-2 dark:text-bodydark rounded-xl shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Ajouter une tâche</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Mettre à jour la tâche
+          </h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4 ">
+            <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
                 Nom de la tâche
               </label>
@@ -112,6 +130,7 @@ export const AddTask = () => {
                   name="date"
                   className="w-full p-3 border border-gray-300 rounded-md"
                   onChange={handleDateChange}
+                  value={task.date.split("/").reverse().join("-")} // reverse formatting for input
                 />
               </div>
               <div className="flex-1">
@@ -121,6 +140,7 @@ export const AddTask = () => {
                   name="time"
                   className="w-full p-3 border border-gray-300 rounded-md"
                   onChange={handleTimeChange}
+                  value={task.time.replace("h", ":")} // replace formatting for input
                 />
               </div>
             </div>
@@ -195,27 +215,12 @@ export const AddTask = () => {
                 type="submit"
                 className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md"
               >
-                Ajouter
+                Mettre à jour
               </button>
               <button
                 type="button"
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md"
-                onClick={() =>
-                  setTask({
-                    ...task,
-                    outside: false,
-                    title: "",
-                    description: "",
-                    date: "",
-                    time: "",
-                    type: "Perso",
-                    weather: {
-                      description: "",
-                      temp: 0,
-                      icon: "",
-                    },
-                  })
-                }
+                onClick={() => navigate("/dashboard/tasks")}
               >
                 Annuler
               </button>

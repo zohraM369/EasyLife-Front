@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import CardDataStats from "../../components/CardDataStats";
 
-import Calendar from "../Calendar";
+import { Calendar } from "../Calendar";
 import { FaRegListAlt } from "react-icons/fa";
 import { FaStop } from "react-icons/fa";
 import { MdDoneOutline } from "react-icons/md";
 import TodayTasks from "../../pages/tasks/TodayTasks";
-import Task from "../../interfaces/TaskInterface";
-import taskServices from "../../services/TaskServices";
+import { Task } from "../../interfaces/TaskInterface";
+import { taskServices } from "../../services/TaskServices";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import friendService from "../../services/friendsService";
+import { friendService } from "../../services/friendsService";
 interface TeamProps {
   friends: { id: string; name: string; image: string }[];
 }
@@ -71,7 +71,7 @@ const TeamComponent: React.FC<TeamProps> = ({ friends }) => {
   );
 };
 
-const UserDashboard: React.FC = () => {
+export const UserDashboard: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [friends, setFriends] = useState<string[]>([]);
   const { user } = useAuth();
@@ -145,5 +145,3 @@ const UserDashboard: React.FC = () => {
     </div>
   );
 };
-
-export default UserDashboard;

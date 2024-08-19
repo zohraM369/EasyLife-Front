@@ -232,12 +232,12 @@ export const AjoutItemTodo: React.FC = () => {
             </div>
             <div className="flex space-x-4">
               <button
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md"
+                className="bg-green-500 hover:bg-customGreen text-white font-bold py-3 px-6 rounded-md"
                 type="submit"
               >
                 Ajouter
               </button>
-              <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md">
+              <button className="bg-red-500 hover:bg-customRouge text-white font-bold py-3 px-6 rounded-md">
                 Annuler
               </button>
             </div>

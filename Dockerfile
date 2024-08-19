@@ -15,4 +15,4 @@ RUN chmod +x /usr/local/bin/install-docker.sh
 EXPOSE 3000
 # run the script to install dependencies after container is up, if only the node_module folder is empty
 ENTRYPOINT ["install-docker.sh"]
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "start"]

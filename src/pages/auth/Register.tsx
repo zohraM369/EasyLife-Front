@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import authService from "../../services/authServices";
+import { authService } from "../../services/authServices";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 export const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -14,7 +15,7 @@ export const Register: React.FC = () => {
         if (result.msg) {
           toast.success("compte creé avec success ! ");
           setTimeout(() => {
-            navigate("/register", { replace: true });
+            navigate("/login", { replace: true });
           }, 2500);
         } else {
           toast.error(result.error);

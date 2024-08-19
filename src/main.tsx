@@ -8,6 +8,8 @@ import {
   createBrowserRouter,
   RouteObject,
 } from "react-router-dom";
+import { ProtectedRoute } from "./layouts/ProtectedRoute";
+
 import {
   ADDTASK,
   ADMINDASHBOARD,
@@ -38,45 +40,47 @@ import {
   UPDATE_EMAIL,
   UPDATE_NAME,
   UPDATE_PASSWORD,
+  UPDATETASK,
   USERTASKS,
 } from "./routes/routes";
 import { AuthLayout } from "./layouts/AuthLayout";
-import UserLayout from "./layouts/UserLayout";
-import Landing from "./pages/Landing/Landing";
+import { UserLayout } from "./layouts/UserLayout";
+import { Landing } from "./pages/Landing/Landing";
 import { Register } from "./pages/auth/Register";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
 import { Login } from "./pages/auth/Login";
-import ResetPassword from "./pages/auth/ResetPassword";
+import { ResetPassword } from "./pages/auth/ResetPassword";
 import "./css/style.css";
 import "./css/satoshi.css";
 import "jsvectormap/dist/jsvectormap.css";
 import "flatpickr/dist/flatpickr.min.css";
-import Calendar from "./pages/Calendar";
+import { Calendar } from "./pages/Calendar";
 import Profile from "./pages/Profile";
 import FormElements from "./pages/Form/FormElements";
 import FormLayout from "./pages/Form/FormLayout";
-import Settings from "./pages/Settings";
+import { Settings } from "./pages/Settings";
 import Chart from "./pages/Chart";
 import Buttons from "./pages/UiElements/Buttons";
 import Alerts from "./pages/UiElements/Alerts";
 import { AddTask } from "./pages/tasks/AddTask";
 import { Messages } from "./pages/Messages/Messages";
-import UserDashboard from "./pages/Dashboard/UserDashboard";
-import AdminLayout from "./layouts/AdminLayout";
-import AdminDashboard from "./pages/Dashboard/AdminDashboard";
+import { UserDashboard } from "./pages/Dashboard/UserDashboard";
+import { AdminLayout } from "./layouts/AdminLayout";
+import { AdminDashboard } from "./pages/Dashboard/AdminDashboard";
 import UsersList from "./pages/UsersList/UsersList";
-import AdminMessages from "./pages/Messages/AdminMessages";
+import { AdminMessages } from "./pages/Messages/AdminMessages";
 import UserNotifications from "./pages/notifications/UserNotifications";
-import UserTasks from "./pages/tasks/UserTasks";
-import ComingTasks from "./pages/tasks/ComingTasks";
-import TaskManagement from "./pages/tasks/TaskManagement";
+import { UserTasks } from "./pages/tasks/UserTasks";
+import { ComingTasks } from "./pages/tasks/ComingTasks";
+import { TaskManagement } from "./pages/tasks/TaskManagement";
 import { NotificationProvider } from "./context/NotificationContext";
 import { UpdateEmail } from "./pages/Profile Management/UpdateEmail";
-import UpdatePassword from "./pages/Profile Management/UpdatePassword";
-import UpdateName from "./pages/Profile Management/UpdateName";
+import { UpdatePassword } from "./pages/Profile Management/UpdatePassword";
+import { UpdateName } from "./pages/Profile Management/UpdateName";
 import { AuthProvider } from "./context/AuthContext";
 import FriendsManager from "./pages/FriendsManagement/FriendsManagement";
-import UpdateCity from "./pages/Profile Management/UpdateCity";
+import { UpdateCity } from "./pages/Profile Management/UpdateCity";
+import { UpdateTask } from "./pages/tasks/UpdateTask";
 const routes: RouteObject[] = [
   {
     path: HOME,
@@ -113,7 +117,9 @@ const routes: RouteObject[] = [
     element: (
       <AuthProvider>
         <NotificationProvider>
-          <UserLayout />
+          <ProtectedRoute allowedRoles={["user"]}>
+            <UserLayout />
+          </ProtectedRoute>
         </NotificationProvider>
       </AuthProvider>
     ),
@@ -137,6 +143,10 @@ const routes: RouteObject[] = [
       {
         path: ADDTASK,
         element: <AddTask />,
+      },
+      {
+        path: UPDATETASK,
+        element: <UpdateTask />,
       },
       {
         path: MESSAGES,
@@ -205,7 +215,9 @@ const routes: RouteObject[] = [
     element: (
       <AuthProvider>
         <NotificationProvider>
-          <AdminLayout />
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminLayout />
+          </ProtectedRoute>
         </NotificationProvider>
       </AuthProvider>
     ),

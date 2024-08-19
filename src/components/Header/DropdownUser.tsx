@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import ClickOutside from "../ClickOutside";
-import UserOne from "../../assets/user.png";
-import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import ClickOutside from '../ClickOutside';
+import UserOne from '../../assets/user.png';
+import {useAuth} from '../../context/AuthContext';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
-  const [userImage, setUserImage] = useState(UserOne);
-  useEffect(() => {
-    if (user && user.image) {
-      setUserImage("http://localhost:8000" + user.image);
-    }
-  }, [user]);
+useEffect(()=>{
+  console.log(user)
+})
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
       <Link
@@ -22,12 +19,12 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user?.name}
+             {user?.name}
           </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={userImage} alt="User" />
+          <img src={"http://localhost:8000"+user?.image} alt="User" />
         </span>
 
         <svg
@@ -52,6 +49,7 @@ const DropdownUser = () => {
           className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
         >
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+           
             <li>
               <Link
                 to="/dashboard/messages"
@@ -99,10 +97,7 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button
-            onClick={logout}
-            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-          >
+          <button onClick={logout} className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
             <svg
               className="fill-current"
               width="22"

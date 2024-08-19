@@ -1,7 +1,7 @@
-import WeatherResponse from "./WeatherInterface";
+import { WeatherResponse } from "./WeatherInterface";
 
-interface Task {
-  _id?:string;
+export interface Task {
+  _id?: string;
   user_id: string;
   title: string;
   description: string;
@@ -10,8 +10,6 @@ interface Task {
   type: string;
   outside: boolean;
   status: string;
-  weather: WeatherResponse
-  notes:[string]
+  weather: WeatherResponse;
+  notes: [string];
 }
-
-export default Task

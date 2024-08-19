@@ -15,7 +15,7 @@ interface TaskSummary {
   [status: string]: number;
 }
 
-
+//third party applications ==> nodemailer 
 const API_BASE_URL = 'http://localhost:8000/admin'; 
 
 const getUsers = async (): Promise<User[]> => {
