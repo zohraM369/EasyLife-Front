@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { FaEnvelope, FaTrash, FaStar } from "react-icons/fa";
-import adminServices from "../../services/adminServices";
-import { MessageModal } from "../Messages/MessageModal";
-import { Message } from "../../interfaces/MessageInterface";
-import messagesServices from "../../services/messagesServices";
-import { authService } from "../../services/authServices";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react';
+import { FaEnvelope, FaTrash, FaStar } from 'react-icons/fa';
+import adminServices from '../../services/adminServices';
+import MessageModal from '../Messages/MessageModal';
+import { Message } from '../../interfaces/MessageInterface';
+import messagesServices from '../../services/messagesServices';
+import authService from '../../services/authServices';
+import { toast } from 'react-toastify';
 
 interface User {
   _id: string;
@@ -15,6 +15,7 @@ interface User {
   email: string;
   phone: string;
   role: string;
+  city: string; 
 }
 
 const itemsPerPage = 3;
@@ -25,6 +26,8 @@ const UsersList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [recipient, setRecipient] = useState<User[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBy, setFilterBy] = useState<'name' | 'email' | 'city' | 'phone'>('name');
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
   const handlePrevPage = () => {
@@ -36,10 +39,14 @@ const UsersList: React.FC = () => {
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentUsers = users.slice(startIndex, startIndex + itemsPerPage);
+  const currentUsers = users
+    .filter((user) =>
+      user[filterBy]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .slice(startIndex, startIndex + itemsPerPage);
 
   const handleGetUsers = async () => {
-    let result = await adminServices.getUsers();
+    let result:any = await adminServices.getUsers();
     console.log(result);
     setUsers(result);
   };
@@ -47,24 +54,41 @@ const UsersList: React.FC = () => {
   useEffect(() => {
     handleGetUsers();
   }, []);
+
   const handleSendMessage = async (message: Message) => {
     const newMessage = await messagesServices.createMessage(message);
     setMessages([...messages, newMessage]);
   };
 
   const handleDeleteUser = async (id: string) => {
-    await authService
-      .delete_user(id)
-      .then(() => {
-        toast.error("utilisateur supprimé !");
-      })
-      .then(() => {
-        handleGetUsers();
-      });
+    await authService.delete_user(id).then(() => {
+      toast.error('utilisateur supprimé !');
+    }).then(() => {
+      handleGetUsers();
+    });
   };
 
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-md">
+      <div className="mb-4 flex space-x-2">
+        <select
+          value={filterBy}
+          onChange={(e) => setFilterBy(e.target.value as 'name' | 'email' | 'city' | 'phone')}
+          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="name">Nom</option>
+          <option value="email">Email</option>
+          <option value="city">ville</option>
+          <option value="phone">Telephone</option>
+        </select>
+        <input
+          type="text"
+          placeholder={`Search by ${filterBy}`}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
       <div className="w-full overflow-x-auto">
         <table className="w-full whitespace-no-wrap">
           <tbody>
@@ -80,7 +104,7 @@ const UsersList: React.FC = () => {
                     alt="Avatar"
                   />
                   <div className="ml-2">
-                    <div className="font-bold text-gray-900">{user.name}</div>_{" "}
+                    <div className="font-bold text-gray-900">{user.name}</div>
                   </div>
                 </td>
                 <td className="px-4 py-2">

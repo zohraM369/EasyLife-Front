@@ -1,10 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Task } from "../interfaces/TaskInterface";
-import { taskServices } from "../services/TaskServices";
-import { useAuth } from "./AuthContext";
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import {  toast } from 'react-toastify';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import Task from '../interfaces/TaskInterface';
+import taskServices from '../services/TaskServices';
+import { useAuth } from './AuthContext';
 
 interface Notification {
   id: number;
@@ -20,7 +20,17 @@ interface NotificationContextProps {
   handleDeleteNotification: (id: number) => void;
 }
 
-const LOCAL_STORAGE_KEY = "notifications";
+
+const updateTaskStatusToLate = async (taskId: string,task:Task) => {
+  try {
+    await taskServices.updateTask(taskId, { ...task,status: "late" });
+    console.log(`Task ${taskId} marked as late.`);
+  } catch (error) {
+    console.error(`Error updating task ${taskId} to late:`, error);
+  }
+};
+
+const LOCAL_STORAGE_KEY = 'notifications';
 
 const saveNotificationsToLocalStorage = (notifications: Notification[]) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(notifications));
@@ -32,7 +42,7 @@ const getNotificationsFromLocalStorage = (): Notification[] => {
 };
 
 const parseTimeString = (time: string): Date => {
-  const [hours, minutes] = time.split("h").map(Number);
+  const [hours, minutes] = time.split('h').map(Number);
   const date = new Date();
   date.setHours(hours);
   date.setMinutes(minutes);
@@ -40,6 +50,26 @@ const parseTimeString = (time: string): Date => {
   date.setMilliseconds(0);
   return date;
 };
+const parseDateTimeString = (date: string, time: string): Date => {
+  const [day, month, year] = date.split('/').map(Number);
+  const [hours, minutes] = time.split('h').map(Number);
+  const dateTime = new Date(year, month - 1, day, hours, minutes, 0, 0);
+  return dateTime;
+};
+
+const parseTaskDate = (date:string) => {
+  const [day, month, year] = date.split("/").map(Number);
+  const storedDate = new Date(year, month - 1, day);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  if (storedDate.getTime() === currentDate.getTime()) {
+    return true 
+  } else {
+    false
+  } 
+}
+
+
 
 const scheduleNotification = (
   task: Task,
@@ -48,7 +78,7 @@ const scheduleNotification = (
   notificationSubject: Subject<Notification>,
   scheduledNotifications: Set<string>
 ) => {
-  const taskStartTime = parseTimeString(task.time).getTime();
+  const taskStartTime = parseDateTimeString(task.date, task.time).getTime();
   const now = Date.now();
   const notificationTime = taskStartTime - timeDifference;
   const uniqueId = `${task._id}-${message}`;
@@ -59,41 +89,35 @@ const scheduleNotification = (
     setTimeout(() => {
       const notificationText = `La tâche "${task.title}" commence dans ${message}`;
       notificationSubject.next({ id: Date.now(), text: notificationText });
-      toast.info(notificationText); // Trigger toast notification
+      toast.info(notificationText); 
     }, delay);
 
     scheduledNotifications.add(uniqueId);
   } else {
-    console.warn(
-      `Notification for task "${task.title}" is in the past or already scheduled.`
-    );
+    console.warn(`Notification for task "${task.title}" is in the past or already scheduled.`);
   }
 };
 
 const itemsPerPage = 3;
 
-const NotificationContext = createContext<NotificationContextProps | undefined>(
-  undefined
-);
+const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
 
-const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tasks, setTasks] = useState<Task[]>([]);
   const scheduledNotifications = useState<Set<string>>(new Set())[0];
   const notificationSubject = useState(new Subject<Notification>())[0];
   const { user } = useAuth();
-  const user_id = user?._id ? user._id : "undefined";
+  const user_id = user?._id ? user._id : 'undefined';
 
   const fetchTasks = async () => {
     try {
       const response = await taskServices.getUserTasks(user_id);
-      console.log("Fetched tasks:", response);
+      console.log('Fetched tasks:', response);
       setTasks(response);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error('Error fetching tasks:', error);
     }
   };
 
@@ -116,22 +140,23 @@ const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     tasks.forEach((task) => {
       const intervals = [
-        { message: "24 heures", timeDifference: 24 * 60 * 60 * 1000 },
-        { message: "6 heures", timeDifference: 6 * 60 * 60 * 1000 },
-        { message: "1 heure", timeDifference: 60 * 60 * 1000 },
-        { message: "30 minutes", timeDifference: 30 * 60 * 1000 },
-        { message: "maintenant", timeDifference: 0 },
+        { message: '24 heures', timeDifference: 24 * 60 * 60 * 1000 },
+        { message: '6 heures', timeDifference: 6 * 60 * 60 * 1000 },
+        { message: '1 heure', timeDifference: 60 * 60 * 1000 },
+        { message: '30 minutes', timeDifference: 30 * 60 * 1000 },
+        { message: 'maintenant', timeDifference: 0 },
       ];
 
       intervals.forEach(({ message, timeDifference }) => {
-        scheduleNotification(
-          task,
-          message,
-          timeDifference,
-          notificationSubject,
-          scheduledNotifications
-        );
+        scheduleNotification(task, message, timeDifference, notificationSubject, scheduledNotifications);
       });
+      const taskStartTime = parseTimeString(task.time).getTime();
+  const now = Date.now();
+       if (( parseTaskDate(task.date) && taskStartTime < now && task.status !== "done") || (parseTaskDate(task.date) && taskStartTime < now && task.status !== "active")) {
+    updateTaskStatusToLate(task._id,task).then(()=>{
+          toast.warn(`La tâche ${task.title} est en retard !`)
+    })
+  } 
     });
 
     return () => {
@@ -159,9 +184,9 @@ const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
     const updatedNotifications = notifications.filter(
       (notification) => notification.id !== id
     );
-
+    
     setNotifications(updatedNotifications);
-    saveNotificationsToLocalStorage(updatedNotifications);
+    saveNotificationsToLocalStorage(updatedNotifications); 
   };
 
   return (
@@ -176,7 +201,7 @@ const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
       }}
     >
       {children}
-      <ToastContainer />
+      
     </NotificationContext.Provider>
   );
 };
@@ -184,9 +209,7 @@ const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 const useNotification = (): NotificationContextProps => {
   const context = useContext(NotificationContext);
   if (context === undefined) {
-    throw new Error(
-      "useNotification must be used within a NotificationProvider"
-    );
+    throw new Error('useNotification must be used within a NotificationProvider');
   }
   return context;
 };

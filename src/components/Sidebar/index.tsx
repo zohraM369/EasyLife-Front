@@ -66,7 +66,9 @@ const {
   return (
     <aside
       ref={sidebar}
-      className={`dark:bg-boxdark-2  rounded-lg  m-3 absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden  duration-300 ease-linear bg-blue-100 lg:static lg:translate-x-0 ${
+      className={`dark:bg-boxdark-2 
+         rounded-lg  m-3 absolute left-0 
+         top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden  duration-300 ease-linear bg-blue-100 lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -106,7 +108,10 @@ const {
             <li>
                       <NavLink
                         to="/dashboard"
-                        className={`group relative flex items-center  text-lg gap-2.5 rounded-sm px-4 py-4 font-semibold duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 
+                        className={`group relative flex items-center 
+                           text-lg gap-2.5 rounded-sm px-4 py-4 
+                           font-semibold duration-300 ease-in-out 
+                           hover:bg-blue-200 dark:hover:bg-meta-4 
                           ${
                           (
                             pathname == ('/dashboard')) ?

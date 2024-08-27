@@ -6,13 +6,13 @@ import {
   FaPlus,
   FaRecycle,
 } from "react-icons/fa6";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { taskServices } from "../../services/TaskServices";
-import { friendService } from "../../services/friendsService";
+import taskServices from "../../services/TaskServices";
+import friendService from "../../services/friendsService";
 import { useAuth } from "../../context/AuthContext";
 
-export const TaskManagement: React.FC = () => {
+const TaskManagement: React.FC = () => {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const { user } = useAuth();
@@ -21,20 +21,12 @@ export const TaskManagement: React.FC = () => {
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [task, setTask] = useState(null);
-
-  const handleGetTask = async (taskId: string) => {
-    let data = await taskServices.getTaskById(taskId);
-    setTask(data);
-    console.log(data);
-  };
+  const [task, setTask] = useState<any>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const fetchedUsers = await friendService.getFriends(user._id);
-        console.log(user._id);
-        console.log(fetchedUsers);
         setUsers(fetchedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -43,6 +35,11 @@ export const TaskManagement: React.FC = () => {
     fetchUsers();
     handleGetTask(taskId);
   }, [user]);
+
+  const handleGetTask = async (taskId: string) => {
+    let data = await taskServices.getTaskById(taskId);
+    setTask(data);
+  };
 
   const handleDeleteTask = async (taskId: string) => {
     try {
@@ -57,6 +54,7 @@ export const TaskManagement: React.FC = () => {
 
   const handleUpdateTaskStatus = async (taskId: string, status: string) => {
     let newTask = { ...task, status: status };
+    console.log(newTask)
     try {
       await taskServices.updateTask(taskId, newTask);
       handleGetTask(taskId);
@@ -73,7 +71,6 @@ export const TaskManagement: React.FC = () => {
 
     try {
       await taskServices.updateTask(taskId, updatedTask);
-      console.log("Task updated successfully");
       handleGetTask(taskId);
     } catch (error) {
       console.error("Error updating task:", error);
@@ -88,7 +85,6 @@ export const TaskManagement: React.FC = () => {
 
     try {
       await taskServices.updateTask(task._id, updatedTask);
-      console.log("Friends added to team successfully");
       setShowModal(false);
       handleGetTask(taskId);
     } catch (error) {
@@ -104,76 +100,147 @@ export const TaskManagement: React.FC = () => {
     );
   };
 
-  const handleRemoveTeamMember = async (data) => {
+  const handleRemoveTeamMember = async (data: {
+    todoId: string;
+    userId: string;
+  }) => {
     await taskServices.removeTeamMember(data);
     handleGetTask(taskId);
   };
 
   return (
     <div className="p-6 bg-blue-50 min-h-screen">
-      <ToastContainer />
-      <div className="max-w-2xl mx-auto">
-        <div className="text-3xl font-bold mb-4 text-blue-500">Mes tâches</div>
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div className="text-center capitalize text-3xl font-bold mb-4 text-blue-600">
+          {task?.title}
+        </div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="flex items-center font-bold text-red-500">
+          <h2 className="flex items-center font-bold text-red-600">
             <FaCircle className="mr-2" /> {task?.type}
           </h2>
-          <button onClick={() => handleDeleteTask(task?._id)}>
-            <FaTrash color="red" />
+          <button
+            onClick={() => handleDeleteTask(task?._id)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <FaTrash size={18} />
           </button>
           <div className="flex items-center">
-            <FaRecycle color="green" className="mx-3" />{" "}
             <button
               onClick={() => navigate(`/dashboard/update_task/${task?._id}`)}
+              className="flex items-center text-green-500 hover:text-green-700"
             >
-              Mettre a jour
+              <FaRecycle className="mx-2" /> Mettre à jour
             </button>
           </div>
         </div>
 
-        <div className="p-4 bg-white rounded shadow">
+        <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
           <div className="flex justify-between items-center mb-2">
-            <h1 className="font-medium text-blue-500">{task?.title}</h1>
-            <select
-              className="shadow border-1"
-              onChange={(e) => handleUpdateTaskStatus(task._id, e.target.value)}
-            >
-              <option value="done" className={getStatusColor("done")}>
-                Terminé
-              </option>
-              <option value="coming" className={getStatusColor("coming")}>
-                Prochainement
-              </option>
-              <option value="cancelled" className={getStatusColor("cancelled")}>
-                Annulé
-              </option>
-              <option value="active" className={getStatusColor("active")}>
-                En cours
-              </option>
-              <option value="late" className={getStatusColor("late")}>
-                En retard
-              </option>
-            </select>
-            <span className="text-green-500 font-medium">{task?.status}</span>
-          </div>
-          <div>
-            <div className="flex justify-around">
-              <div className="flex flex-row items-center text-gray-500 mb-4">
-                <FaCalendar className="mr-2" />
-                <span>{task?.date}</span>
-              </div>
-              <div className="shadow-xl border-2 flex flex-col items-center text-center">
-                <h1 className="underline underline-offset-8 mb-3">Méteo</h1>
-                <p>{task?.weather.temp} C°</p>
-                <p>{task?.weather.description}</p>
-                <p>
-                  <img src={task?.weather.icon} alt="Weather icon" />
-                </p>
-              </div>
+            <h1 className="font-medium text-xl text-blue-600">{task?.title}</h1>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name={`status-${task?._id}`}
+                  value="done"
+                  checked={task?.status == "done"}
+                  className="mr-2"
+                  onChange={(e) =>
+                    handleUpdateTaskStatus(task._id, e.target.value)
+                  }
+                />
+                <span className={getStatusColor("done")}>Terminé</span>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name={`status-${task?._id}`}
+                  value="coming"
+                  checked={task?.status == "coming"}
+                  className="mr-2"
+                  onChange={(e) =>
+                    handleUpdateTaskStatus(task._id, e.target.value)
+                  }
+                />
+                <span className={getStatusColor("coming")}>A venir</span>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name={`status-${task?._id}`}
+                  value="cancelled"
+                  checked={task?.status == "cancelled"}
+                  className="mr-2"
+                  onChange={(e) =>
+                    handleUpdateTaskStatus(task._id, e.target.value)
+                  }
+                />
+                <span className={getStatusColor("cancelled")}>Annulé</span>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name={`status-${task?._id}`}
+                  value="active"
+                  checked={task?.status == "active"}
+                  className="mr-2"
+                  onChange={(e) =>
+                    handleUpdateTaskStatus(task._id, e.target.value)
+                  }
+                />
+                <span className={getStatusColor("active")}>En cours</span>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name={`status-${task?._id}`}
+                  value="late"
+                  checked={task?.status == "late"}
+                  className="mr-2"
+                  onChange={(e) =>
+                    handleUpdateTaskStatus(task._id, e.target.value)
+                  }
+                />
+                <span className={getStatusColor("late")}>En retard</span>
+              </label>
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="flex justify-around mt-4">
+            <div className="flex items-center text-gray-500">
+              <FaCalendar className="mr-2" />
+              <span>{task?.date}</span>
+            </div>
+            {task?.outside ? (
+                <div className="mt-4 bg-gradient-to-b from-blue-400 to-blue-600 p-6 rounded-2xl shadow-lg w-1/2 mx-auto">
+     <div className="shadow shadow-lg flex items-center justify-center text-center current-weather">
+       
+              <div className=" text-white flex flex-col items-center text-center p-4 rounded-lg shadow-sm">
+                <h1 className="underline underline-offset-8 mb-2 text-lg">
+                  Météo
+                </h1>
+                <div className="flex">
+                  {" "}
+                  <p className="mx-3">{task?.weather.temp} C°</p>
+                  <p>{task?.weather.description}</p>
+                </div>
+
+                <img
+                  src={task?.weather.icon}
+                  alt="Weather icon"
+                  className="w-25 h-25 mt-2"
+                />
+              </div>
+              </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-6">
             <label
               className="block mb-2 font-medium text-gray-700"
               htmlFor="notes"
@@ -183,7 +250,7 @@ export const TaskManagement: React.FC = () => {
             <input
               type="text"
               id="notes"
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-4 py-2 border rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Ajouter des notes..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -192,28 +259,28 @@ export const TaskManagement: React.FC = () => {
 
           <button
             disabled={note === ""}
-            className={`px-6 py-2 ${
-              note === "" ? "bg-blue-300" : "bg-green-600"
-            } text-white rounded shadow-md`}
+            className={`mt-4 px-6 py-2 text-white rounded-lg shadow-md ${
+              note === "" ? "bg-blue-300" : "bg-green-600 hover:bg-green-700"
+            }`}
             onClick={() => handleAddNote(task._id)}
           >
             Ajouter
           </button>
 
-          <div className="flex justify-around items-center mt-4">
+          <div className="flex justify-between items-center mt-6">
             <button
-              className="flex items-center text-blue-500"
+              className="flex items-center text-blue-500 hover:text-blue-700"
               onClick={() => setShowModal(true)}
             >
               <FaPlus className="mr-2" /> Ajouter amis
             </button>
-            <div>
-              {task?.team.map((el) => (
+            <div className="mt-4">
+              {task?.team.map((el: any) => (
                 <div
                   key={el._id}
-                  className="flex items-center justify-between mb-2"
+                  className="flex items-center justify-between mb-2 bg-white p-2 rounded-lg shadow-sm"
                 >
-                  <span className="p-4 shadow">{el.name}</span>
+                  <span className="p-2 shadow-sm text-gray-700">{el.name}</span>
                   <button
                     onClick={() =>
                       handleRemoveTeamMember({
@@ -221,8 +288,9 @@ export const TaskManagement: React.FC = () => {
                         userId: el._id,
                       })
                     }
+                    className="text-red-500 hover:text-red-700"
                   >
-                    <FaTrash color="red" />
+                    <FaTrash size={16} />
                   </button>
                 </div>
               ))}
@@ -230,7 +298,7 @@ export const TaskManagement: React.FC = () => {
           </div>
 
           <button
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded shadow-md"
+            className="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700"
             onClick={() => setShowNotesModal(true)}
           >
             Voir les notes
@@ -238,65 +306,64 @@ export const TaskManagement: React.FC = () => {
         </div>
 
         {showModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow-xl w-1/3">
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-96">
               <h2 className="text-xl font-bold mb-4">
-                Ajouter des amis à votre tâche
+                Ajouter amis à l'équipe
               </h2>
-              <div className="mb-4">
-                {users.map((user) => (
+              <div className="max-h-64 overflow-y-auto">
+                {users.map((user: any) => (
                   <div key={user._id} className="flex items-center mb-2">
                     <input
                       type="checkbox"
                       checked={selectedUsers.includes(user._id)}
                       onChange={() => toggleUserSelection(user._id)}
+                      className="mr-2"
                     />
-                    <span className="ml-2">{user.name}</span>
+                    <span>{user.name}</span>
                   </div>
                 ))}
               </div>
-              <button
-                className="px-4 py-2 bg-green-500 text-white rounded mr-2"
-                onClick={handleAddFriendsToTeam}
-              >
-                Valider
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded"
-                onClick={() => setShowModal(false)}
-              >
-                Annuler
-              </button>
+              <div className="mt-6 flex justify-end space-x-2">
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
+                  onClick={() => setShowModal(false)}
+                >
+                  Annuler
+                </button>
+                <button
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+                  onClick={handleAddFriendsToTeam}
+                >
+                  Ajouter
+                </button>
+              </div>
             </div>
           </div>
         )}
 
         {showNotesModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow-xl w-1/3">
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-96">
               <h2 className="text-xl font-bold mb-4">Notes</h2>
-              {task?.notes && task.notes.length > 0 ? (
-                <ul>
-                  {task.notes.map(
-                    (note, index) =>
-                      note != "" && (
-                        <li key={index} className="mb-2">
-                          - {note}
-                        </li>
-                      )
-                  )}
-                </ul>
-              ) : (
-                <ul>
-                  <li>aucune note</li>
-                </ul>
-              )}
-              <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow-md"
-                onClick={() => setShowNotesModal(false)}
-              >
-                Fermer
-              </button>
+              <div className="max-h-64 overflow-y-auto">
+                {task?.notes?.map((note: any, index: number) => (
+                  <p
+                    key={index}
+                    className="mb-2 p-2 rounded-lg shadow-sm bg-gray-100"
+                  >
+                    {note}
+                  </p>
+                ))}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700"
+                  onClick={() => setShowNotesModal(false)}
+                >
+                  Fermer
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -305,17 +372,21 @@ export const TaskManagement: React.FC = () => {
   );
 };
 
-const getStatusColor = (status: string) => {
+function getStatusColor(status: string) {
   switch (status) {
-    case "coming":
-      return "font-lg text-orange-600";
-    case "active":
-      return "font-lg text-blue-600";
     case "done":
-      return "font-lg text-green-600";
+      return "text-green-600";
+    case "coming":
+      return "text-blue-600";
     case "cancelled":
-      return "font-lg text-red-600";
+      return "text-red-600";
+    case "active":
+      return "text-yellow-600";
+    case "late":
+      return "text-orange-600";
     default:
-      return "font-lg text-gray-600";
+      return "";
   }
-};
+}
+
+export default TaskManagement;

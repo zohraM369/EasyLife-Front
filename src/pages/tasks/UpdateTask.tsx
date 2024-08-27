@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { taskServices } from "../../services/TaskServices";
-import { Task } from "../../interfaces/TaskInterface";
+import taskServices from "../../services/TaskServices";
+import Task from "../../interfaces/TaskInterface";
 import { getWeatherForTask } from "../../services/WeatherServices";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export const UpdateTask = () => {
   const navigate = useNavigate();
-  const { taskId } = useParams();
+  const { taskId } = useParams(); 
   const { user } = useAuth();
   const [task, setTask] = useState<Task>({
     user_id: user._id,
@@ -26,6 +26,8 @@ export const UpdateTask = () => {
       icon: "",
     },
   });
+
+  
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -58,11 +60,11 @@ export const UpdateTask = () => {
           const updatedTask = { ...task, weather: weather.data.data };
 
           const response = await taskServices.updateTask(taskId, updatedTask);
-
+            console.log(response)
           toast.success(response.msg);
 
           setTimeout(() => {
-            navigate("/dashboard/tasks");
+            navigate('/dashboard/tasks');
           }, 2500);
         }
       } catch (error) {
@@ -89,17 +91,12 @@ export const UpdateTask = () => {
 
   return (
     <div className="min-h-screen flex">
-      <ToastContainer />
       <main className="flex-1 p-8 bg-gray-50">
         <section className="bg-white p-8 dark:bg-boxdark-2 dark:text-bodydark rounded-xl shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">
-            Mettre à jour la tâche
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">Mettre à jour la tâche</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Nom de la tâche
-              </label>
+              <label className="block text-sm font-medium mb-2">Nom de la tâche</label>
               <input
                 type="text"
                 name="title"
@@ -110,9 +107,7 @@ export const UpdateTask = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Description
-              </label>
+              <label className="block text-sm font-medium mb-2">Description</label>
               <input
                 type="text"
                 name="description"
@@ -130,7 +125,7 @@ export const UpdateTask = () => {
                   name="date"
                   className="w-full p-3 border border-gray-300 rounded-md"
                   onChange={handleDateChange}
-                  value={task.date.split("/").reverse().join("-")} // reverse formatting for input
+                  value={task.date.split('/').reverse().join('-')} // reverse formatting for input
                 />
               </div>
               <div className="flex-1">
@@ -140,7 +135,7 @@ export const UpdateTask = () => {
                   name="time"
                   className="w-full p-3 border border-gray-300 rounded-md"
                   onChange={handleTimeChange}
-                  value={task.time.replace("h", ":")} // replace formatting for input
+                  value={task.time.replace('h', ':')} // replace formatting for input
                 />
               </div>
             </div>
@@ -194,9 +189,7 @@ export const UpdateTask = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-md font-medium mb-2">
-                Localisation
-              </label>
+              <label className="block text-md font-medium mb-2">Localisation</label>
               <div className="flex space-x-4">
                 <label className="flex items-center">
                   <input
@@ -220,7 +213,7 @@ export const UpdateTask = () => {
               <button
                 type="button"
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md"
-                onClick={() => navigate("/dashboard/tasks")}
+                onClick={() => navigate('/dashboard/tasks')}
               >
                 Annuler
               </button>

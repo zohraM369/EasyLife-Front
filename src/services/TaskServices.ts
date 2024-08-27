@@ -1,59 +1,75 @@
-import axios from "axios";
-import { Task } from "../interfaces/TaskInterface";
-import { toast } from "react-toastify";
+import axios from 'axios';
+import Task from '../interfaces/TaskInterface';
+import { toast } from 'react-toastify';
 
-const API_URL = "http://localhost:8000/tasks"; // Replace with your API URL
+const API_URL = 'http://localhost:8000/tasks';
+
+const apiClient = axios.create({
+  baseURL: API_URL,
+});
+
+// Add a request interceptor to include the token in the headers
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 interface CreateTaskResponse {
   msg: string;
   data?: Task;
 }
 
-export const taskServices = {
+const taskServices = {
   // Fetch all tasks
   getUserTasks: async (user_id: string): Promise<Task[]> => {
-    console.log("am working ! ");
-    const response = await axios.get<Task[]>(
-      API_URL + `/get_user_tasks/${user_id}`
-    );
+    console.log("am working!");
+    const response = await apiClient.get<Task[]>(`/get_user_tasks/${user_id}`);
     return response.data;
   },
 
-  // Fetch a task by ID
   getTaskById: async (id: string): Promise<Task> => {
-    const response = await axios.get<Task>(`${API_URL}/get_task_by_id/${id}`);
+    const response = await apiClient.get<Task>(`/get_task_by_id/${id}`);
     return response.data;
   },
 
   // Create a new task
   createTask: async (task: Task): Promise<CreateTaskResponse> => {
     console.log(task);
-    const response = await axios.post<CreateTaskResponse>(
-      API_URL + "/add_task",
-      task
-    );
+    const response = await apiClient.post<CreateTaskResponse>('/add_task', task);
     return response.data;
   },
 
-  // Update a task
   updateTask: async (id: string, task: Task): Promise<any> => {
-    await axios.put<Task>(API_URL + "/update_task/" + id, task);
-    return toast.info("Tâche mis a jour avec success ! ");
-  },
+  await apiClient.put<Task>(`/update_task/${id}`, task);
 
-  // Delete a task
+  // Show the notification only if the task's status is not "late"
+  if (task.status !== "late") {
+    return toast.info("Tâche mise à jour avec succès !");
+  }
+},
+
   deleteTask: async (id: string): Promise<any> => {
-    await axios.delete(API_URL + "/delete_task/" + id);
-    return toast.error("Tâche supprimé");
+    await apiClient.delete(`/delete_task/${id}`);
+    return toast.error("Tâche supprimée");
   },
 
   addTeamMemberToTask: async (data: any): Promise<any> => {
-    await axios.post(API_URL + "/add_team_member_to_task", data);
-    return toast.error("Tâche supprimé");
+    await apiClient.post('/add_team_member_to_task', data);
+    return toast.success("Membre ajouté à la tâche !");
   },
 
   removeTeamMember: async (data: any): Promise<any> => {
-    await axios.put(API_URL + "/remove_team_member_from_task", data);
+    await apiClient.put('/remove_team_member_from_task', data);
     return toast.error("Membre supprimé");
   },
 };
+
+export default taskServices;

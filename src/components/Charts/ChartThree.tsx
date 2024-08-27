@@ -58,6 +58,7 @@ const ChartThree: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await adminServices.getTotalTasksByStatus()
+        console.log(response)
         const data = response;
 
         // Map the API response to the chart's series
@@ -65,7 +66,7 @@ const ChartThree: React.FC = () => {
           data.done || 0,       
           data.cancelled || 0,  
           data.coming || 0,     
-          data.later || 0       
+          data.late || 0       
         ];
 
         setState((prevState) => ({

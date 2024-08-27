@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import DarkModeSwitcher from '../components/Header/DarkModeSwitcher';
 import authService from '../services/authServices';
 import { useAuth } from '../context/AuthContext';
-const Settings: React.FC = () => {
+const AdminSettings: React.FC = () => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [profileImage, setProfileImage] = useState(null);
@@ -98,4 +98,4 @@ useEffect(()=>{
   );
 };
 
-export default Settings;
+export default AdminSettings;

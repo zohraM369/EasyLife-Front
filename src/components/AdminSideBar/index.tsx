@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { TiMessages } from "react-icons/ti";
 import { FaArrowUpLong } from "react-icons/fa6";
-import { FaListAlt } from "react-icons/fa";
-import { FaPlusCircle } from "react-icons/fa";
+
 import { IoSettingsSharp } from "react-icons/io5";
-import { HiMiniBellAlert } from "react-icons/hi2";
+
 
 import Logo from '../../assets/easylife_logo.svg';
 
@@ -62,9 +61,9 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   }, [sidebarExpanded]);
 
   return (
-    <aside
+   <aside
       ref={sidebar}
-      className={`rounded-lg  m-3 absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden  duration-300 ease-linear bg-blue-100 lg:static lg:translate-x-0 ${
+      className={`dark:bg-boxdark-2  rounded-lg  m-3 absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden  duration-300 ease-linear bg-blue-100 lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -105,11 +104,14 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <li>
                       <NavLink
                         to="/admin_dashboard"
-                        className={`group relative flex items-center  text-lg gap-2.5 rounded-sm px-4 py-4 font-semibold duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 
+                        className={`group relative flex items-center 
+                           text-lg gap-2.5 rounded-sm px-4 py-4 
+                           font-semibold duration-300 ease-in-out 
+                           hover:bg-blue-200 dark:hover:bg-meta-4 
                           ${
                           (
                             pathname == ('/admin_dashboard')) ?
-                          'text-blue-600' : "text-bodydark1"
+                          'text-blue-600' : "dark:text-white text-bodydark1"
                         }`} >
                         <svg
                           className="fill-current"
@@ -146,9 +148,9 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <li>
                 <NavLink
                   to="/admin_dashboard/messages"
-                  className={`group relative flex text-lg items-center gap-2.5 rounded-sm py-4 px-4 font-semibold duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 ${
-                    pathname.includes('/admin_dashboard/messages') ?
-                          'text-blue-600' : "text-bodydark1"
+                  className={`group relative flex items-center text-lg gap-2.5 rounded-sm py-4 px-4 font-semibold  duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 ${
+                    pathname.includes('/admin_dashboard/messages')  ?
+                          'text-blue-600' : "dark:text-white text-bodydark1"
                   }`}
                 >
                   <TiMessages />
@@ -159,10 +161,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                 <li>
                 <NavLink
-                  to="/admin_dashboard/users"
+                   to="/admin_dashboard/users"
                   className={`group relative flex items-center text-lg gap-2.5 rounded-sm py-4 px-4 font-semibold  duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 ${
-                    pathname.includes('/dashboard/calendar')  ?
-                          'text-blue-600' : "text-bodydark1"
+                    pathname.includes('/admin_dashboard/users')  ?
+                          'text-blue-600' : "dark:text-white text-bodydark1"
                   }`}
                 >
                  <FaArrowUpLong />
@@ -172,10 +174,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
                 <li>
                 <NavLink
-                  to="/admin_dashboard/settings"
+                 to="/admin_dashboard/settings"
                   className={`group relative flex items-center text-lg gap-2.5 rounded-sm py-4 px-4 font-semibold  duration-300 ease-in-out hover:bg-blue-200 dark:hover:bg-meta-4 ${
-                    pathname.includes('/dashboard/calendar')  ?
-                          'text-blue-600' : "text-bodydark1"
+                    pathname.includes('/admin_dashboard/settings')  ?
+                          'text-blue-600' : "dark:text-white text-bodydark1"
                   }`}
                 >
                  <IoSettingsSharp  />

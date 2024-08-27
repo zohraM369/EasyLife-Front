@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
 import { useNotification } from '../../context/NotificationContext'; // Updated import
-import {ToastContainer} from 'react-toastify';
 
 const DropdownNotification: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -16,8 +15,7 @@ const DropdownNotification: React.FC = () => {
   } = useNotification();
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
-      <ToastContainer/>
-      <li>
+       <li>
         <Link
           onClick={() => setDropdownOpen(!dropdownOpen)}
           to="#"

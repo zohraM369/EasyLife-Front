@@ -1,5 +1,5 @@
 import React from "react";
-import { Unauthorized } from "./Unauthorized";
+import Unauthorized from "./Unauthorized";
 import { useAuth } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
@@ -7,10 +7,7 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  allowedRoles,
-  children,
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
   const { user } = useAuth();
 
   if (!user || !allowedRoles.includes(user.role)) {
@@ -19,3 +16,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   return <>{children}</>;
 };
+
+export default ProtectedRoute;
+// <protectedRoute role="admin">
+
+// <admindashboard />
+// </protectdrouts>

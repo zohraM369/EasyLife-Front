@@ -1,19 +1,51 @@
 import React, { useState } from "react";
-import { authService } from "../../services/authServices";
+import authService from "../../services/authServices";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-export const Register: React.FC = () => {
+const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
   const navigate = useNavigate();
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regx => regular expression xxx@xxx.xxx
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const newErrors: { name?: string; email?: string; password?: string } = {};
+
+    if (!name) {
+      newErrors.name = "Le nom est requis.";
+    }
+
+    if (!email) {
+      newErrors.email = "L'email est requis.";
+    } else if (!validateEmail(email)) {
+      newErrors.email = "L'adresse email n'est pas valide.";
+    }
+
+    if (!password) {
+      newErrors.password = "Le mot de passe est requis.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       await authService.register({ name, email, password }).then((result) => {
         if (result.msg) {
-          toast.success("compte creé avec success ! ");
+          toast.success("Compte créé avec succès !");
           setTimeout(() => {
             navigate("/login", { replace: true });
           }, 2500);
@@ -22,9 +54,10 @@ export const Register: React.FC = () => {
         }
       });
     } catch (error) {
-      console.error("register failed", error);
+      console.error("Registration failed", error);
     }
   };
+
   return (
     <>
       <div className="bg-customBlue4">
@@ -43,17 +76,23 @@ export const Register: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
+                {errors.name && (
+                  <span className="text-red-500 text-sm">{errors.name}</span>
+                )}
               </div>
               <div>
                 <label className="block text-black font-inter">
                   Email <span className="text-customRouge">*</span>
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {errors.email && (
+                  <span className="text-red-500 text-sm">{errors.email}</span>
+                )}
               </div>
               <div>
                 <label className="block text-black font-inter">
@@ -65,6 +104,11 @@ export const Register: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                {errors.password && (
+                  <span className="text-red-500 text-sm">
+                    {errors.password}
+                  </span>
+                )}
               </div>
               <p className="text-red-500 text-sm">
                 Les champs marqués d'un (*) sont obligatoires.
@@ -88,3 +132,5 @@ export const Register: React.FC = () => {
     </>
   );
 };
+
+export default Register;

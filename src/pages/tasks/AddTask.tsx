@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { taskServices } from "../../services/TaskServices";
-import { Task } from "../../interfaces/TaskInterface";
+import taskServices from "../../services/TaskServices";
+import Task from "../../interfaces/TaskInterface";
 import { getWeatherForTask } from "../../services/WeatherServices";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import flatpickr from "flatpickr";
+
 export const AddTask = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -25,44 +27,69 @@ export const AddTask = () => {
     },
   });
 
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    date: "",
+    time: "",
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setTask((prevTask) => ({
       ...prevTask,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validate = () => {
+    const newErrors: any = {};
+    if (!task.title) newErrors.title = "Le nom de la tâche est requis";
+    if (!task.description) newErrors.description = "La description est requise";
+    if (!task.date) newErrors.date = "La date est requise";
+    if (!task.time) newErrors.time = "L'heure est requise";
+    return newErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (user?.city) {
-      try {
+
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      if (task.outside && user?.city) {
         const weather = await getWeatherForTask(task, user.city);
-        console.log(weather);
         if (weather.data) {
           const updatedTask = { ...task, weather: weather.data.data };
-
           const response = await taskServices.createTask(updatedTask);
-
           toast.success(response.msg);
-
           setTimeout(() => {
             navigate("/dashboard/tasks");
           }, 2500);
         }
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
+      } else {
+        const response = await taskServices.createTask(task);
+        toast.success(response.msg);
+        setTimeout(() => {
+          navigate("/dashboard/tasks");
+        }, 2500);
       }
-    } else {
-      console.log("City not found in local storage.");
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
     }
   };
 
   const handleDateChange = (e: any) => {
-    const rawDate = e.target.value; // Format: "yyyy-mm-dd"
+    const rawDate = e.target.value;
     const [year, month, day] = rawDate.split("-");
     const formattedDate = `${day}/${month}/${year}`;
     setTask({ ...task, date: formattedDate });
+    setErrors({ ...errors, date: "" });
   };
 
   const handleTimeChange = (e: any) => {
@@ -70,15 +97,16 @@ export const AddTask = () => {
     const [hours, minutes] = rawTime.split(":");
     const formattedTime = `${hours}h${minutes}`;
     setTask({ ...task, time: formattedTime });
+    setErrors({ ...errors, time: "" });
   };
+
   return (
-    <div className=" min-h-screen flex">
-      <ToastContainer />
-      <main className=" flex-1 p-8 bg-gray-50 ">
+    <div className="min-h-screen flex">
+      <main className="flex-1 p-8 bg-gray-50">
         <section className="bg-white p-8 dark:bg-boxdark-2 dark:text-bodydark rounded-xl shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Ajouter une tâche</h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4 ">
+            <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
                 Nom de la tâche
               </label>
@@ -90,6 +118,9 @@ export const AddTask = () => {
                 value={task.title}
                 onChange={handleChange}
               />
+              {errors.title && (
+                <span className="text-red-500 text-sm">{errors.title}</span>
+              )}
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -103,16 +134,29 @@ export const AddTask = () => {
                 value={task.description}
                 onChange={handleChange}
               />
+              {errors.description && (
+                <span className="text-red-500 text-sm">
+                  {errors.description}
+                </span>
+              )}
             </div>
             <div className="mb-4 flex space-x-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium mb-2">Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  className="w-full p-3 border border-gray-300 rounded-md"
-                  onChange={handleDateChange}
-                />
+                <div>
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Date picker
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="w-full p-3 border border-gray-300 rounded-md"
+                      type="date"
+                      onChange={handleDateChange}
+                    />
+                  </div>
+                  {errors.date && (
+                    <span className="text-red-500 text-sm">{errors.date}</span>
+                  )}
+                </div>
               </div>
               <div className="flex-1">
                 <label className="block text-sm font-medium mb-2">Heure</label>
@@ -122,6 +166,9 @@ export const AddTask = () => {
                   className="w-full p-3 border border-gray-300 rounded-md"
                   onChange={handleTimeChange}
                 />
+                {errors.time && (
+                  <span className="text-red-500 text-sm">{errors.time}</span>
+                )}
               </div>
             </div>
             <div className="mb-4">

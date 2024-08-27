@@ -2,6 +2,7 @@ import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { FaCircle } from 'react-icons/fa6';
 import { useNotification } from '../../context/NotificationContext'; 
+import WeatherForecast from './WeatherForcast';
 
 const UserNotifications: React.FC = () => {
   const {
@@ -75,6 +76,8 @@ const UserNotifications: React.FC = () => {
           Suivant
         </button>
       </div>
+      <h4 className=' font-inter text-red-600'>N'oubliez pas de vérifier les conditions météo avant de sortir</h4>
+      <WeatherForecast/>
     </div>
   );
 };

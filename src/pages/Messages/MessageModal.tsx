@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import { Recipient } from "../../interfaces/RecipientInterface";
-import { Message } from "../../interfaces/MessageInterface";
-import { useAuth } from "../../context/AuthContext";
+import React, { useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
+import { Recipient } from '../../interfaces/RecipientInterface';
+import { Message } from '../../interfaces/MessageInterface';
+import {useAuth} from '../../context/AuthContext';
 
 interface MessageModalProps {
   recipients: Recipient[];
@@ -10,18 +10,14 @@ interface MessageModalProps {
   onClose: () => void;
 }
 
-export const MessageModal: React.FC<MessageModalProps> = ({
-  recipients,
-  onSend,
-  onClose,
-}) => {
-  const [content, setContent] = useState("");
-  const { user } = useAuth();
-  const [recipientId, setRecipientId] = useState("");
-  const userId = user?._id ?? user?._id ?? "defaultUserId";
+const MessageModal: React.FC<MessageModalProps> = ({ recipients, onSend, onClose }) => {
+  const [content, setContent] = useState('');
+  const {user} = useAuth()
+  const [recipientId, setRecipientId] = useState('');
+const userId = user?._id ?? user?._id ?? 'defaultUserId';
   const handleSend = () => {
     if (content && recipientId) {
-      const message: Message = { user_id: userId, content, recipientId };
+      const message: Message = { user_id: userId, content, recipientId }; 
       onSend(message);
       onClose();
     }
@@ -33,21 +29,17 @@ export const MessageModal: React.FC<MessageModalProps> = ({
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Envoyer un message</h2>
           <button onClick={onClose}>
-            <FaTimes className="text-customRouge" />
+            <FaTimes className="text-red-500" />
           </button>
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Destinataire
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Destinataire</label>
           <select
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
             value={recipientId}
             onChange={(e) => setRecipientId(e.target.value)}
           >
-            <option value="" disabled>
-              Sélectionner un destinataire
-            </option>
+            <option value="" disabled>Sélectionner un destinataire</option>
             {recipients.map((recipient) => (
               <option key={recipient._id} value={recipient._id}>
                 {recipient.name} | {recipient.email}
@@ -56,9 +48,7 @@ export const MessageModal: React.FC<MessageModalProps> = ({
           </select>
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Message
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Message</label>
           <textarea
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
             value={content}
@@ -75,3 +65,5 @@ export const MessageModal: React.FC<MessageModalProps> = ({
     </div>
   );
 };
+
+export default MessageModal;
