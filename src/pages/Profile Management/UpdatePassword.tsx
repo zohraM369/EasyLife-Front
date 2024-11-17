@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import {toast,ToastContainer} from 'react-toastify';
-import authService from '../../services/authServices';
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import authService from "../../services/authServices";
+import { useNavigate } from "react-router-dom";
 
-const UpdatePassword: React.FC = () => {
-    const navigate = useNavigate()
+export const UpdatePassword: React.FC = () => {
+  const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -12,32 +12,37 @@ const UpdatePassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const user_id = "66a941d4d83285e45c8ea688";
 
-const handleUpdate = () => {
-  if(newPassword != confirmPassword) {
-      toast.error("Les deux mot de passes ne sont identiques")
-  }else {
-     authService.updatePassword(user_id,oldPassword,newPassword).then(result=>{
-      console.log(result)
-    if(result.error) {
-      toast.error(result.error)
-    }else {
-      toast.success(result.msg)
+  const handleUpdate = () => {
+    if (newPassword != confirmPassword) {
+      toast.error("Les deux mot de passes ne sont identiques");
+    } else {
+      authService
+        .updatePassword(user_id, oldPassword, newPassword)
+        .then((result) => {
+          console.log(result);
+          if (result.error) {
+            toast.error(result.error);
+          } else {
+            toast.success(result.msg);
+          }
+        });
     }
-  })
-  }
- }
+  };
 
- const handleBack = () => {
-    navigate('/dashboard/settings')
- }
+  const handleBack = () => {
+    navigate("/dashboard/settings");
+  };
 
   return (
     <div className="p-8  mx-auto bg-white shadow-md rounded-md">
-      
-      <h2 className="text-xl font-semibold text-blue-500 mb-4">Modifier le mot de passe</h2>
-      <ToastContainer/>
+      <h2 className="text-xl font-semibold text-blue-500 mb-4">
+        Modifier le mot de passe
+      </h2>
+      <ToastContainer />
       <div className="mb-4 relative">
-        <label className="block text-sm font-medium text-gray-700">Mot de passe actuelle</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Mot de passe actuelle
+        </label>
         <input
           type={showPassword ? "text" : "password"}
           value={oldPassword}
@@ -49,12 +54,13 @@ const handleUpdate = () => {
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-9 text-gray-600"
         >
-          {showPassword ? '🙈' : '👁️'}
+          {showPassword ? "🙈" : "👁️"}
         </button>
       </div>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Nouvelle Mot de passe 
-</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Nouvelle Mot de passe
+        </label>
         <input
           type="text"
           value={newPassword}
@@ -63,7 +69,9 @@ const handleUpdate = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Confirmation nouvelle mot de passe</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Confirmation nouvelle mot de passe
+        </label>
         <input
           type="text"
           value={confirmPassword}
@@ -71,13 +79,21 @@ const handleUpdate = () => {
           className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
         />
       </div>
-      
+
       <div className="mt-5 flex justify-around">
-        <button className="bg-green-500 text-white py-2 px-4 rounded-md" onClick={handleUpdate}>Modifier</button>
-        <button className="bg-orange-500 text-white py-2 px-4 rounded-md" onClick={handleBack}>Retour</button>
+        <button
+          className="bg-green-500 text-white py-2 px-4 rounded-md"
+          onClick={handleUpdate}
+        >
+          Modifier
+        </button>
+        <button
+          className="bg-orange-500 text-white py-2 px-4 rounded-md"
+          onClick={handleBack}
+        >
+          Retour
+        </button>
       </div>
     </div>
   );
 };
-
-export default UpdatePassword;

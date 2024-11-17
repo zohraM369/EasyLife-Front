@@ -3,7 +3,7 @@ import authService from "../../services/authServices";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const Register: React.FC = () => {
+export const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -132,5 +132,3 @@ const Register: React.FC = () => {
     </>
   );
 };
-
-export default Register;

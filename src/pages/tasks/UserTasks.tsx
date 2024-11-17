@@ -99,7 +99,7 @@ const UserTasks: React.FC = () => {
 const getTaskColor = (category: string) => {
   switch (category) {
     case 'Education': return 'text-green-600';
-    case 'Perso': return 'text-yellow-600';
+    case 'Perso': return 'text-yellow';
     case 'Santé et bien être': return 'text-red-600';
     case 'Travail': return 'text-blue-600';
     default: return 'text-gray-600';

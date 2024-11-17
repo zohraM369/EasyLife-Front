@@ -1,10 +1,10 @@
-import React from 'react';
-import { FaTrash } from 'react-icons/fa';
-import { FaCircle } from 'react-icons/fa6';
-import { useNotification } from '../../context/NotificationContext'; 
-import WeatherForecast from './WeatherForcast';
+import React from "react";
+import { FaTrash } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa6";
+import { useNotification } from "../../context/NotificationContext";
+import { WeatherForecast } from "./WeatherForcast";
 
-const UserNotifications: React.FC = () => {
+export const UserNotifications: React.FC = () => {
   const {
     notifications,
     currentPage,
@@ -16,17 +16,20 @@ const UserNotifications: React.FC = () => {
 
   const uniqueNotifications = Array.from(
     new Map(
-      notifications.map(notification => [notification.text, notification])
+      notifications.map((notification) => [notification.text, notification])
     ).values()
   );
 
   const itemsPerPage = 3;
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentNotifications = uniqueNotifications.slice(startIndex, startIndex + itemsPerPage);
+  const currentNotifications = uniqueNotifications.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark w-full p-4 bg-white rounded-lg shadow-md">
-      <h1 className='font-bold text-blue-500 text-md'>Les Notifications</h1>
+      <h1 className="font-bold text-blue-500 text-md">Les Notifications</h1>
       <div className="w-full overflow-x-auto">
         <table className="w-full whitespace-no-wrap">
           <tbody>
@@ -37,7 +40,9 @@ const UserNotifications: React.FC = () => {
                 </td>
                 <td className="px-4 py-2 flex items-center">
                   <div className="ml-2">
-                    <div className="font-bold text-gray-900">{notification.text}</div>
+                    <div className="font-bold text-gray-900">
+                      {notification.text}
+                    </div>
                   </div>
                 </td>
                 <td className="px-4 py-2">
@@ -76,10 +81,10 @@ const UserNotifications: React.FC = () => {
           Suivant
         </button>
       </div>
-      <h4 className=' font-inter text-red-600'>N'oubliez pas de vérifier les conditions météo avant de sortir</h4>
-      <WeatherForecast/>
+      <h4 className=" font-inter text-red-600">
+        N'oubliez pas de vérifier les conditions météo avant de sortir
+      </h4>
+      <WeatherForecast />
     </div>
   );
 };
-
-export default UserNotifications;

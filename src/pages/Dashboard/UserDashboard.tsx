@@ -6,7 +6,7 @@ import { FaRegListAlt } from "react-icons/fa";
 import { FaStop } from "react-icons/fa";
 import { MdDoneOutline } from "react-icons/md";
 import TodayTasks from "../../pages/tasks/TodayTasks";
-import Task from "../../interfaces/TaskInterface";
+import {Task} from "../../interfaces/TaskInterface";
 import taskServices from "../../services/TaskServices";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";

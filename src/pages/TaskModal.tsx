@@ -1,5 +1,5 @@
 import React from 'react';
-import Task from '../interfaces/TaskInterface';
+import {Task} from '../interfaces/TaskInterface';
 import {FaTimes} from 'react-icons/fa';
 
 
@@ -64,7 +64,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ tasks, onClose }) => {
 const getTaskColor = (category: string) => {
   switch (category) {
     case 'Education': return 'bg-green-700';
-    case 'Perso': return 'bg-yellow-700';
+    case 'Perso': return 'bg-yellow';
     case 'Santé et bien être': return 'bg-red-700';
     case 'Travail': return 'bg-blue-700';
     default: return 'bg-gray-700';

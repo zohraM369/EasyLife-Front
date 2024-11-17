@@ -3,7 +3,7 @@ import authService from '../../services/authServices';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 
-const UpdateEmail: React.FC = () => {
+export const UpdateEmail: React.FC = () => {
   const navigate = useNavigate()
   const [newEmail, setNewEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
@@ -73,4 +73,4 @@ const handleUpdate = () => {
   );
 };
 
-export default UpdateEmail;
+

@@ -154,7 +154,7 @@ export default ComingTasks;
 const getTaskColor = (category: string) => {
   switch (category) {
     case 'Éducation': return 'bg-green-700';
-    case 'Perso': return 'bg-yellow-700';
+    case 'Perso': return 'bg-yellow';
     case 'Santé et bien être': return 'bg-red-700';
     case 'Travail': return 'bg-blue-700';
     default: return 'bg-gray-700';

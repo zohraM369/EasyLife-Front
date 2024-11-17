@@ -3,7 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
+export const Login: React.FC = () => {
   const { login, sendVerificationCode, verifyCode } = useAuth();
   const navigate = useNavigate();
 
@@ -172,5 +172,3 @@ const Login: React.FC = () => {
     </div>
   );
 };
-
-export default Login;

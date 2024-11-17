@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import taskServices from "../../services/TaskServices";
-import Task from "../../interfaces/TaskInterface";
+import { Task } from "../../interfaces/TaskInterface";
 import { getWeatherForTask } from "../../services/WeatherServices";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import flatpickr from "flatpickr";
+
 
 export const AddTask = () => {
   const navigate = useNavigate();
@@ -144,7 +144,7 @@ export const AddTask = () => {
               <div className="flex-1">
                 <div>
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Date picker
+                    Date
                   </label>
                   <div className="relative">
                     <input
@@ -173,7 +173,7 @@ export const AddTask = () => {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Type</label>
-              <div className="flex space-x-4">
+              <div className="flex flex-col space-y-2 ml-4">
                 <label className="flex items-center">
                   <input
                     type="radio"
@@ -220,6 +220,7 @@ export const AddTask = () => {
                 </label>
               </div>
             </div>
+
             <div className="mb-4">
               <label className="block text-md font-medium mb-2">
                 Localisation
@@ -237,16 +238,16 @@ export const AddTask = () => {
                 </label>
               </div>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 items-center justify-center w-full">
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md"
+                className="bg-customGreen hover:bg-green-600 text-white font-bold py-3 px-10 rounded-3xl"
               >
                 Ajouter
               </button>
               <button
                 type="button"
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md"
+                className="bg-customRouge hover:bg-red-600 text-white font-bold py-3 px-10 rounded-3xl"
                 onClick={() =>
                   setTask({
                     ...task,

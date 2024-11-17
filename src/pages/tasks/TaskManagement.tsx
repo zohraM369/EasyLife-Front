@@ -381,7 +381,7 @@ function getStatusColor(status: string) {
     case "cancelled":
       return "text-red-600";
     case "active":
-      return "text-yellow-600";
+      return "text-yellow";
     case "late":
       return "text-orange-600";
     default:
